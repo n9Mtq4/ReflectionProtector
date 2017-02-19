@@ -77,6 +77,8 @@ public final class ReflectionProtector {
 	}
 	
 	private static boolean usedReflection(int min, int max, StackTraceElement[] stackTraceElements) {
+		if (min < 0) min = 0;
+		if (max > stackTraceElements.length) max = stackTraceElements.length;
 		for (int i = min; i < max; i++) {
 			if (stackTraceElements[i].getClassName().startsWith("java.lang.reflect") || 
 					stackTraceElements[i].getClassName().startsWith("sun.reflect")) return true;
