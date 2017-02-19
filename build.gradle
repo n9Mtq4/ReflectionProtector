@@ -1,0 +1,28 @@
+group 'ReflectionProtector'
+version '1.0'
+
+apply plugin: 'java'
+
+sourceCompatibility = 1.6
+
+repositories {
+    mavenCentral()
+    maven { url 'https://jitpack.io' }
+}
+
+dependencies {
+    testCompile group: 'junit', name: 'junit', version: '4.11'
+    testCompile 'com.github.n9Mtq4:ReflectionHelper:v1.0.10'
+}
+
+gradle.taskGraph.afterTask { Task task, TaskState state ->
+//    if the build succeeded
+    if (!state.failure && task.name.equalsIgnoreCase('build')) {
+//        copy the jar into the distro directory
+        exec {
+            executable 'bash'
+            //noinspection GroovyAssignabilityCheck
+            args '-c', 'rm ' + project.getName() + '-source.zip; cd src/main/; find . -name \'*.DS_Store\' -type f -delete; zip ../../' + project.getName() + '-source.zip -r java -x .* -Z deflate'
+        }
+    }
+}
